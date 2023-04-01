@@ -1,0 +1,151 @@
+/*
+ * @Author: IlleniumDillon 147900130@qq.com
+ * @Date: 2023-03-12 12:38:51
+ * @LastEditors: IlleniumDillon 147900130@qq.com
+ * @LastEditTime: 2023-03-12 14:27:35
+ * @FilePath: \buildd:\ARMFPGA\MM32F5277_Keil\PinMap\MM32_TIM_PinMap.h
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+
+#ifndef _MM32_TIM_PINMAP_H_
+#define _MM32_TIM_PINMAP_H_
+
+#include <MM32_PinMapType.h>
+
+extern MM32_TIM_Pin TIM1_BKIN1_PA6;
+extern MM32_TIM_Pin TIM1_CH1N_PA7;
+extern MM32_TIM_Pin TIM1_CH1_PA8;
+extern MM32_TIM_Pin TIM1_CH2_PA9;
+extern MM32_TIM_Pin TIM1_CH3_PA10;
+extern MM32_TIM_Pin TIM1_CH4_PA11;
+extern MM32_TIM_Pin TIM1_ETR_PA12;
+
+extern MM32_TIM_Pin TIM1_CH2N_PB0;
+extern MM32_TIM_Pin TIM1_CH3N_PB1;
+extern MM32_TIM_Pin TIM1_CH4N_PB2;
+extern MM32_TIM_Pin TIM1_BKIN2_PB12;
+extern MM32_TIM_Pin TIM1_CH1N_PB13;
+extern MM32_TIM_Pin TIM1_CH2N_PB14;
+extern MM32_TIM_Pin TIM1_CH3N_PB15;
+
+extern MM32_TIM_Pin TIM1_BKIN3_PC0;
+
+extern MM32_TIM_Pin TIM1_ETR_PE7;
+extern MM32_TIM_Pin TIM1_CH1N_PE8;
+extern MM32_TIM_Pin TIM1_CH1_PE9;
+extern MM32_TIM_Pin TIM1_CH2N_PE10;
+extern MM32_TIM_Pin TIM1_CH2_PE11;
+extern MM32_TIM_Pin TIM1_CH3N_PE12;
+extern MM32_TIM_Pin TIM1_CH3_PE13;
+extern MM32_TIM_Pin TIM1_CH4_PE14;
+extern MM32_TIM_Pin TIM1_BKIN4_PE15;
+
+extern MM32_TIM_Pin TIM1_ETR_PH2;
+
+extern MM32_TIM_Pin TIM1_CH4N_PI0;
+
+
+extern MM32_TIM_Pin TIM2_ETR_PA0;
+extern MM32_TIM_Pin TIM2_CH1_PA0;
+extern MM32_TIM_Pin TIM2_CH2_PA1;
+extern MM32_TIM_Pin TIM2_CH3_PA2;
+extern MM32_TIM_Pin TIM2_CH4_PA3;
+extern MM32_TIM_Pin TIM2_CH1_PA5;
+extern MM32_TIM_Pin TIM2_ETR_PA5;
+extern MM32_TIM_Pin TIM2_CH1_PA15;
+extern MM32_TIM_Pin TIM2_ETR_PA15;
+
+extern MM32_TIM_Pin TIM2_CH2_PB3;
+extern MM32_TIM_Pin TIM2_CH3_PB10;
+extern MM32_TIM_Pin TIM2_CH4_PB11;
+
+extern MM32_TIM_Pin TIM2_ETR_PI1;
+
+
+extern MM32_TIM_Pin TIM3_ETR_PA5;
+extern MM32_TIM_Pin TIM3_CH1_PA6;
+extern MM32_TIM_Pin TIM3_CH2_PA7;
+extern MM32_TIM_Pin TIM3_ETR_PA8;
+
+extern MM32_TIM_Pin TIM3_CH3_PB0;
+extern MM32_TIM_Pin TIM3_CH4_PB1;
+extern MM32_TIM_Pin TIM3_CH1_PB4;
+extern MM32_TIM_Pin TIM3_CH2_PB5;
+
+extern MM32_TIM_Pin TIM3_CH1_PC6;
+extern MM32_TIM_Pin TIM3_CH2_PC7;
+extern MM32_TIM_Pin TIM3_CH3_PC8;
+extern MM32_TIM_Pin TIM3_CH4_PC9;
+
+extern MM32_TIM_Pin TIM3_ETR_PD2;
+
+extern MM32_TIM_Pin TIM3_CH1_PE2;
+extern MM32_TIM_Pin TIM3_CH2_PE3;
+extern MM32_TIM_Pin TIM3_CH3_PE4;
+extern MM32_TIM_Pin TIM3_CH4_PE5;
+extern MM32_TIM_Pin TIM3_CH3_PE6;
+
+
+extern MM32_TIM_Pin TIM4_ETR_PB3;
+extern MM32_TIM_Pin TIM4_CH1_PB6;
+extern MM32_TIM_Pin TIM4_CH2_PB7;
+extern MM32_TIM_Pin TIM4_CH3_PB8;
+extern MM32_TIM_Pin TIM4_CH4_PB9;
+
+extern MM32_TIM_Pin TIM4_ETR_PD11;
+extern MM32_TIM_Pin TIM4_CH1_PD12;
+extern MM32_TIM_Pin TIM4_CH2_PD13;
+extern MM32_TIM_Pin TIM4_CH3_PD14;
+extern MM32_TIM_Pin TIM4_CH4_PD15;
+
+extern MM32_TIM_Pin TIM4_ETR_PE0;
+
+
+extern MM32_TIM_Pin TIM5_CH1_PA0;
+extern MM32_TIM_Pin TIM5_CH2_PA1;
+extern MM32_TIM_Pin TIM5_CH3_PA2;
+extern MM32_TIM_Pin TIM5_CH4_PA3;
+extern MM32_TIM_Pin TIM5_ETR_PA4;
+
+extern MM32_TIM_Pin TIM5_ETR_PB12;
+
+extern MM32_TIM_Pin TIM5_ETR_PF6;
+extern MM32_TIM_Pin TIM5_CH1_PF6;
+extern MM32_TIM_Pin TIM5_CH2_PF7;
+extern MM32_TIM_Pin TIM5_CH3_PF8;
+extern MM32_TIM_Pin TIM5_CH4_PF9;
+
+extern MM32_TIM_Pin TIM5_ETR_PI1;
+
+
+extern MM32_TIM_Pin TIM8_ETR_PA0;
+extern MM32_TIM_Pin TIM8_CH1N_PA5;
+extern MM32_TIM_Pin TIM8_BKIN1_PA6;
+extern MM32_TIM_Pin TIM8_CH1N_PA7;
+
+extern MM32_TIM_Pin TIM8_CH2N_PB0;
+extern MM32_TIM_Pin TIM8_CH3N_PB1;
+extern MM32_TIM_Pin TIM8_CH4N_PB2;
+extern MM32_TIM_Pin TIM8_CH3N_PB5;
+extern MM32_TIM_Pin TIM8_CH4N_PB6;
+extern MM32_TIM_Pin TIM8_CH1N_PB8;
+extern MM32_TIM_Pin TIM8_CH2N_PB9;
+extern MM32_TIM_Pin TIM8_CH1N_PB13;
+extern MM32_TIM_Pin TIM8_CH2N_PB14;
+extern MM32_TIM_Pin TIM8_CH3N_PB15;
+
+extern MM32_TIM_Pin TIM8_BKIN2_PC1;
+extern MM32_TIM_Pin TIM8_CH1_PC6;
+extern MM32_TIM_Pin TIM8_CH2_PC7;
+extern MM32_TIM_Pin TIM8_CH3_PC8;
+extern MM32_TIM_Pin TIM8_CH4_PC9;
+extern MM32_TIM_Pin TIM8_CH1_PC13;
+extern MM32_TIM_Pin TIM8_CH2_PC14;
+extern MM32_TIM_Pin TIM8_CH3_PC15;
+
+extern MM32_TIM_Pin TIM8_ETR_PH2;
+
+extern MM32_TIM_Pin TIM8_CH4_PI0;
+extern MM32_TIM_Pin TIM8_ETR_PI1;
+
+#endif
