@@ -145,22 +145,20 @@ void CTRL_Update(void)
 
 		MM32_DAC_SetDualValue((*pbpfX)/10.0*4096.0,(*pbpfY)/10.0*4096.0);*/
 	
-		//float fbx = (float)MM32_ADC_OneShotGetValue(&ADC1_IN8_PB0) / 4096.0 * 10;
-		//float fby = (float)MM32_ADC_OneShotGetValue(&ADC2_IN9_PB1) / 4096.0 * 10;
-		//float erx = target_X - fbx;
-		//float ery = target_Y - fby;
+		float fbx = ADC1_Value / 4096.0 * 10;
+		float fby = ADC2_Value / 4096.0 * 10;
+		float erx = target_X - fbx;
+		float ery = target_Y - fby;
 		//float cox = tf_update(&CTRL_X,erx);
-		//float coy = tf_update(&CTRL_Y,ery);
+		float coy = tf_update(&CTRL_Y,ery);
 		//float bpx = tf_update(&BPF_X,cox);
-		//float bpy = tf_update(&BPF_Y,coy);
+		float bpy = tf_update(&BPF_Y,coy);
 		
 		//if(bpx>9.9) bpx = 9.9;
 		//if(bpx<0) bpx = 0;
-		//if(bpy>9.9) bpy = 9.9;
-		//if(bpy<0) bpy = 0;
-		float bpy = tf_update(&BPF_Y,target_Y);
 		if(bpy>9.9) bpy = 9.9;
 		if(bpy<0) bpy = 0;
+		
 		MM32_DAC_SetDualValue(target_X/10.0*4096.0,bpy/10.0*4096.0);
 
     //CTRL_HostUploadDebugInfo();

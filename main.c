@@ -53,7 +53,7 @@ int main(void)
 	__enable_irq;
 	CTRL_PinInit();
 	CTRL_Init(NULL,NULL);
-	CTRL_Start(NULL,NULL);
+	//CTRL_Start(NULL,NULL);
 	while(1)
 	{
 		shell_run();
