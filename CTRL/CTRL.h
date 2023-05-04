@@ -19,6 +19,7 @@
 #include <eShell.h>
 
 #include <tf.h>
+#include <BoucWen.h>
 
 #define CTRL_PERIOD (0.0001)
 #define CTRL_FREQ   (1/CTRL_PERIOD)

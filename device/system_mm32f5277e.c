@@ -199,8 +199,12 @@ void EnablePeripherals(void)
 void NVICInit(void)
 {
   __disable_irq;
+	NVIC_SetPriority(TIM6_IRQn,0);
   NVIC_EnableIRQ(TIM6_IRQn);
+	NVIC_SetPriority(UART2_IRQn,1);
   NVIC_EnableIRQ(UART2_IRQn);
+	NVIC_SetPriority(TIM7_IRQn,2);
+	NVIC_EnableIRQ(TIM7_IRQn);
 }
 
 /* EOF. */

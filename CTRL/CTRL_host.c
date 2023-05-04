@@ -2,25 +2,20 @@
  * @Author: IlleniumDillon 147900130@qq.com
  * @Date: 2023-03-22 18:30:35
  * @LastEditors: IlleniumDillon 147900130@qq.com
- * @LastEditTime: 2023-03-27 17:48:59
+ * @LastEditTime: 2023-04-04 16:54:34
  * @FilePath: \buildd:\ARMFPGA\MM32F5277_Keil\CTRL\CTRL_host.c
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 #include "CTRL_host.h"
 
-uint8_t hostTxBuffer[37] = {0xff,0x5a,0xff,0xa5,2,0,0,0,0,0,0,0,0
-                            ,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+uint8_t hostTxBuffer[13] = {0xff,0x5a,0xff,0xa5,2,0,0,0,0,0,0,0,0};
 
 float* pfeedBackX = (float*)&hostTxBuffer[5];
 float* pfeedBackY = (float*)&hostTxBuffer[9];
-float* ptargetX = (float*)&hostTxBuffer[13];
-float* ptargetY = (float*)&hostTxBuffer[17];
-float* pctrloutX = (float*)&hostTxBuffer[21];
-float* pctrloutY = (float*)&hostTxBuffer[25];
-float* pbpfX = (float*)&hostTxBuffer[29];
-float* pbpfY = (float*)&hostTxBuffer[33];
 
 uint8_t hostRxBuffer[10] = {0};
+
+uint8_t indx = 0;
 
 void CTRL_HostInit(void)
 {
@@ -30,7 +25,7 @@ void CTRL_HostInit(void)
     MM32_DMA_ChannelConfig connfig = {.bursten = 0,
                                     .are = 0,
                                     .mem2mem = 0,
-                                    .pl = 3,
+                                    .pl = 0,
                                     .msize = 0,
                                     .psize = 2,
                                     .minc = 1,
@@ -41,12 +36,37 @@ void CTRL_HostInit(void)
                                     .enableHTI = 0,
                                     .enableTCI = 0};
     MM32_DMA_ChannelInit(DMA1,DMA1_CH7_UART2_TX,&connfig);
-    MM32_UART_RXIsrInit(UART2);
-    
+    //MM32_UART_RXIsrInit(UART2);
+																		
+    UARTx_IER(UART2).B.RXIDLE_IEN = 1;
+    MM32_DMA_ChannelConfig connfigrx = {.bursten = 0,
+                                    .are = 0,
+                                    .mem2mem = 0,
+                                    .pl = 2,
+                                    .msize = 0,
+                                    .psize = 2,
+                                    .minc = 1,
+                                    .pinc = 0,
+                                    .circ = 1,
+                                    .dir = 0,
+                                    .enableTEI = 0,
+                                    .enableHTI = 0,
+                                    .enableTCI = 0};
+    MM32_DMA_ChannelInit(DMA1,DMA1_CH6_UART2_RX,&connfigrx);
+    MM32_DMA_ConfigXfer(DMA1,DMA1_CH6_UART2_RX,&UART2_RDR,hostRxBuffer,10);
+    MM32_DMA_StartChannel(DMA1,DMA1_CH6_UART2_RX);
+																		
+																		
+    MM32_TIM_InitTimerTask(TIM7,HOSTFREQ);
+    MM32_TIM_Enable(TIM7);
 }
 
 void CTRL_HostUploadDebugInfo(void)
 {
+		extern uint16_t ADC1_Value;
+		extern uint16_t ADC2_Value;
+		* pfeedBackX = ADC1_Value / 4096.0 * 10;
+		* pfeedBackY = ADC2_Value / 4096.0 * 10;
     while(DMAx_CNDTRy(DMA1,DMA1_CH7_UART2_TX).B.NDT!=0);
     MM32_DMA_ConfigXfer(DMA1,DMA1_CH7_UART2_TX,&UART2_TDR,hostTxBuffer,13);
     MM32_DMA_StartChannel(DMA1,DMA1_CH7_UART2_TX);
@@ -54,11 +74,11 @@ void CTRL_HostUploadDebugInfo(void)
 
 void CTRL_HostGetTarget(void)
 {
-    static uint8_t indx = 0;
-    hostRxBuffer[indx] = MM32_UART_Read8(UART2);
+    //static uint8_t indx = 0;
+    /*hostRxBuffer[indx] = UARTx_RDR(UART2).B.RXREG;
     if(indx == 0)
     {
-        if(hostRxBuffer[indx] == '{') 
+        if(hostRxBuffer[indx] == 0x5a) 
         {
             indx++;
         }
@@ -69,19 +89,34 @@ void CTRL_HostGetTarget(void)
     }
     else if(indx == 9)
     {
-        indx = 0;
-        if(hostRxBuffer[indx] == '}') 
+        if(hostRxBuffer[indx] == 0xa5) 
         {
+						indx = 0;
             target_X = *((float*)&hostRxBuffer[1]);
             target_Y = *((float*)&hostRxBuffer[5]);
         }
         else
         {
+						indx = 0;
             return;
         }
     }
     else
     {
         indx++;
-    }
+    }*/
+		
+		if(DMAx_ISR(DMA1).B.TCIF6 == 1)
+		{
+			DMAx_IFCR(DMA1).B.CTCIF6 = 1;
+			if(hostRxBuffer[0] == 0x5a && hostRxBuffer[9] == 0xa5)
+			{
+				target_X = *((float*)&hostRxBuffer[1]);
+				target_Y = *((float*)&hostRxBuffer[5]);
+			}
+		}
+		else
+		{
+			
+		}
 }

@@ -399,6 +399,8 @@ void Isr_TIM6Handler(void)
 void Isr_TIM7Handler(void)
 {
 	TIM7_SR.B.UIF = 0;
+	extern void CTRL_HostUploadDebugInfo();
+	CTRL_HostUploadDebugInfo();
 }
 
 //UART1 global interrupt
@@ -417,13 +419,20 @@ void Isr_UART1Handler(void)
 //UART2 global interrupt
 void Isr_UART2Handler(void)
 {
-	if(UART2_ISR.B.TX_INTF == 1)
+	/*if(UART2_ISR.B.TX_INTF == 1)
 	{
 		UART2_ICR.B.TX_ICLR = 1;
-	}
-	else if(UART2_ISR.B.RX_INTF == 1)
+	}*/
+	/*if(UART2_ISR.B.RX_INTF == 1)
 	{
 		UART2_ICR.B.RX_ICLR = 1;
+		extern void CTRL_HostGetTarget();
+		CTRL_HostGetTarget();
+	}*/
+	
+	if(UART2_ISR.B.RXIDLE_INTF == 1)
+	{
+		UART2_ICR.B.RXIDLE_ICLR = 1;
 		extern void CTRL_HostGetTarget();
 		CTRL_HostGetTarget();
 	}

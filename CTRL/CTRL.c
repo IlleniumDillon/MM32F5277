@@ -14,6 +14,12 @@ tf_function_t BPF_Y;
 tf_function_t CTRL_X;
 tf_function_t CTRL_Y;
 
+tf_function_t LPF_X;
+tf_function_t LPF_Y;
+
+BoucWenPram BoucWen_X;
+BoucWenPram BoucWen_Y;
+
 uint8_t CTRL_initFlag = 0;
 
 uint16_t ADC1_Value = 0;
@@ -63,6 +69,8 @@ void CTRL_Init(char argc, char *argv)
         tf_deinit(&BPF_Y);
         tf_deinit(&CTRL_X);
         tf_deinit(&CTRL_Y);
+				tf_deinit(&LPF_X);
+        tf_deinit(&LPF_Y);
     }
 
     num[0]=BPF_X_NUM_Z2;
@@ -94,7 +102,31 @@ void CTRL_Init(char argc, char *argv)
     den[2]=CTRL_Y_DEN_Z0;
     tf_initZFunction_ND(&CTRL_Y,num,2,den,3,1,CTRL_PERIOD);
     th_setLimit(&CTRL_Y,0,10);
+		
+		num[0] = 0.0178389676416993;
+		den[0] = 1;
+		den[1] = -0.982161032358301;
+		tf_initZFunction_ND(&LPF_X,num,1,den,2,1,CTRL_PERIOD);
+		tf_initZFunction_ND(&LPF_Y,num,1,den,2,1,CTRL_PERIOD);
+		
+		BoucWen_X.A = 0.264;
+    BoucWen_X.Beta = 1.145;
+    BoucWen_X.bias = 0.105;
+    BoucWen_X.Gamma = 0.378;
+    BoucWen_X.t = 0.0001;
+    BoucWen_X.xlast = 0;
+    BoucWen_X.zlast = 0;
+    BoucWen_X.xdotlast = 0;
 
+    BoucWen_Y.A = 0.264;
+    BoucWen_Y.Beta = 1.145;
+    BoucWen_Y.bias = 0.105;
+    BoucWen_Y.Gamma = 0.378;
+    BoucWen_Y.t = 0.0001;
+    BoucWen_Y.xlast = 0;
+    BoucWen_Y.zlast = 0;
+    BoucWen_Y.xdotlast = 0;
+		
     CTRL_initFlag = 1;
 }SHELL_CMD_EXPORT(init,CTRL_Init);
 
@@ -106,6 +138,8 @@ void CTRL_Reset(void)
         tf_deinit(&BPF_Y);
         tf_deinit(&CTRL_X);
         tf_deinit(&CTRL_Y);
+				tf_deinit(&LPF_X);
+        tf_deinit(&LPF_Y);
         CTRL_initFlag = 0;
     }
 }
@@ -115,6 +149,7 @@ void CTRL_Start(char argc, char *argv)
     //CTRL_Init();
     MM32_TIM_InitTimerTask(TIM6,CTRL_FREQ);
     MM32_TIM_Enable(TIM6);
+		
     MM32_ADC_ScanStart(&ADC1_IN8_PB0);
 		MM32_ADC_ScanStart(&ADC2_IN9_PB1);
 }SHELL_CMD_EXPORT(start,CTRL_Start);
@@ -144,24 +179,31 @@ void CTRL_Update(void)
     *pbpfY = tf_update(&BPF_Y,*pctrloutY);
 
 		MM32_DAC_SetDualValue((*pbpfX)/10.0*4096.0,(*pbpfY)/10.0*4096.0);*/
-	
+	  //static float turbx = 0;
+		float target_Xlpf = tf_update(&LPF_X,target_X);
+		float target_Ylpf = tf_update(&LPF_Y,target_Y);
+		float Z_X = BoucWen_getZ(&BoucWen_X, target_Xlpf) - BoucWen_X.bias;
+    float Z_Y = BoucWen_getZ(&BoucWen_Y, target_Ylpf) - BoucWen_Y.bias;
 		float fbx = ADC1_Value / 4096.0 * 10;
 		float fby = ADC2_Value / 4096.0 * 10;
-		float erx = target_X - fbx;
-		float ery = target_Y - fby;
-		//float cox = tf_update(&CTRL_X,erx);
-		float coy = tf_update(&CTRL_Y,ery);
-		//float bpx = tf_update(&BPF_X,cox);
+		float erx = target_Xlpf - fbx;
+		float ery = target_Ylpf - fby;
+		float cox = tf_update(&CTRL_X,erx)-Z_X;
+		float coy = tf_update(&CTRL_Y,ery)-Z_Y;
+		float bpx = tf_update(&BPF_X,cox);
 		float bpy = tf_update(&BPF_Y,coy);
 		
-		//if(bpx>9.9) bpx = 9.9;
-		//if(bpx<0) bpx = 0;
+		//turbx = fbx*1.1 - bpx+5;
+		
+		if(bpx>9.9) bpx = 9.9;
+		if(bpx<0) bpx = 0;
 		if(bpy>9.9) bpy = 9.9;
 		if(bpy<0) bpy = 0;
 		
-		MM32_DAC_SetDualValue(target_X/10.0*4096.0,bpy/10.0*4096.0);
-
-    //CTRL_HostUploadDebugInfo();
+		//if(turbx>9.9) turbx = 9.9;
+		//if(turbx<0) turbx = 0;
+		
+		MM32_DAC_SetDualValue(bpx/10.0*4096.0,bpy/10.0*4096.0);
 }
 
 void CTRL_Step(char argc, char *argv)
@@ -169,11 +211,13 @@ void CTRL_Step(char argc, char *argv)
     static uint8_t i = 0;
 		if(i == 0)
 		{
+			target_X = 5;
 			target_Y = 5;
 			i = 1;
 		}
 		else
 		{
+			target_X = 1;
 			target_Y = 1;
 			i = 0;
 		}

@@ -3,16 +3,14 @@
 
 #include <MM32_UART.h>
 #include <MM32_DMA.h>
+#include <MM32_TIM.h>
 #include <CTRL_para.h>
 
 extern float* pfeedBackX;
 extern float* pfeedBackY;
-extern float* ptargetX;
-extern float* ptargetY;
-extern float* pctrloutX;
-extern float* pctrloutY;
-extern float* pbpfX;
-extern float* pbpfY;
+
+#define HOSTPERIOD (0.02)
+#define HOSTFREQ (1/HOSTPERIOD)
 
 void CTRL_HostInit(void);
 
